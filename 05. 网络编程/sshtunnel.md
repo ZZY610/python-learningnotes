@@ -79,7 +79,7 @@ ssh_password = 'xxxxxxxxx'
 remote_db_host = 'localhost'
 remote_db_port = 3306
 remote_db_user = 'root'
-remote_db_password = 'zhuzhenyang123'
+remote_db_password = 'xxxxxxxxx'
 
 # 本地端口，用于建立 SSH 隧道
 local_port = 3307
