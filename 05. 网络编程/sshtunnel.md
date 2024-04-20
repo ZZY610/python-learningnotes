@@ -70,10 +70,10 @@ from sshtunnel import SSHTunnelForwarder
 import pymysql
 
 # SSH 连接信息
-ssh_host = '60.204.187.6'
+ssh_host = 'xxxx.xxxx.xxxx.xxxx'
 ssh_port = 22
 ssh_user = 'root'
-ssh_password = 'Zhuzhenyang123!'
+ssh_password = 'xxxxxxxxx'
 
 # 远程数据库信息
 remote_db_host = 'localhost'
