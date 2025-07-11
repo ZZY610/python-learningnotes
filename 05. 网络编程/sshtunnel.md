@@ -77,13 +77,21 @@ import pymysql
 ssh_host = 'xxxx.xxxx.xxxx.xxxx'
 ssh_port = 22
 ssh_user = 'root'
+<<<<<<< HEAD
 ssh_password = 'xxxxxxxx'
+=======
+ssh_password = 'xxxxxxxxx'
+>>>>>>> 1bed25ac45d3b24e5264155a0b14396204a7645f
 
 # 远程数据库信息
 remote_db_host = 'localhost'
 remote_db_port = 3306
 remote_db_user = 'root'
+<<<<<<< HEAD
 remote_db_password = 'xxxxxxxx'
+=======
+remote_db_password = 'xxxxxxxxx'
+>>>>>>> 1bed25ac45d3b24e5264155a0b14396204a7645f
 
 # 本地端口，用于建立 SSH 隧道
 local_port = 3307
