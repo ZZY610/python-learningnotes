@@ -9,11 +9,13 @@ SSH（Secure Shell）协议工作在计算机网络的应用层。它是一种�
 
 SSH 隧道（SSH Tunnel）是一种通过 SSH 连接在两个网络节点之间创建的加密通信通道。这个通道可用于安全地传输网络流量，将本地端口**映射**到远程服务器上的服务端口，或者用于加密和保护数据传输。
 
-SSH 隧道有两端：
+SSH 隧道通常包含以下三个节点：
 
 1. **本地端（Local Endpoint）**：位于本地计算机上。ssh可以将本地端口映射到远程服务器上，使得本地计算机上的应用程序可以通过该端口与远程服务器上的服务进行安全通信。
 
-2. **远程端（Remote Endpoint）**：位于远程服务器上。它负责接收来自本地端口的连接请求，并将流量路由到相应的服务或资源。
+2. **转发端（Forwarding Endpoint）**：转发端是指作为 **SSH 服务器**的那一端。在 SSH 隧道中，转发端负责接受本地端的连接请求，并将这些请求转发到远程端。同时接受远程端的响应数据，并转发回本地端。
+
+3. **远程端（Remote Endpoint）**：位于远程服务器上。它负责接收来自本地端口的连接请求（实际上是转发端的），并将流量路由到相应的服务或资源。
 
 SSH 隧道的主要目的是保护数据的机密性和完整性，以及绕过网络中的潜在威胁，如中间人攻击。常见的 SSH 隧道类型包括：
 
@@ -26,11 +28,11 @@ SSH 隧道的主要目的是保护数据的机密性和完整性，以及绕过�
 ::: tip 注意
 "远程 SSH 服务器" 和 "远程服务器" 可以是不同的服务器。
 
-"远程 SSH 主机" 是你要通过 SSH 协议连接的服务器，它通常用于建立安全的通信通道，可以是你自己的服务器或者是第三方提供的 SSH 服务器。
+"远程 SSH 服务器" 是要通过 SSH 协议连接的服务器，它通常用于建立安全的通信通道，可以是你自己的服务器或者是第三方提供的 SSH 服务器。
 
 "远程服务器" 则是你希望通过 SSH 隧道访问的实际服务所在的服务器，它可以位于 "远程 SSH 主机" 同一台服务器上，也可以是局域网中的其他服务器。
 
-SSH 隧道的作用是通过 "远程 SSH 主机" 连接到 "远程服务器" 上的服务。
+SSH 隧道的作用是通过 "远程 SSH 服务器" 连接到 "远程服务器" 上的服务。
 :::
 
 ## SSHTunnelForwarder类
@@ -40,7 +42,7 @@ SSH 隧道的作用是通过 "远程 SSH 主机" 连接到 "远程服务器" 上
 ### 关键参数
 
 * **ssh_address_or_host (tuple or str)**
-远程SSH服务器的IP地址（和ssh开放端口号）
+**远程SSH服务器**（转发端）的IP地址（和ssh开放端口号）
     * 传入元组：`(主机IP,端口号)`
     * 传入字符串：主机IP
 
@@ -53,33 +55,35 @@ SSH 隧道的作用是通过 "远程 SSH 主机" 连接到 "远程服务器" 上
 
 * **local_bind_address** (tuple)
     * 传入元组（主机IP，端口号）。两个参数都是可选的，默认 `('0000',RANDOM_PORT)`
-    * 本地绑定地址。代表隧道本端IP和端口。
-
+    * **本地绑定地址**。代表隧道本端IP和端口。这个地址通常是本地回环地址 127.0.0.1，这样只有本地可以访问这个端口。端口号可以是任意未被占用的端口。
 * **remote_bind_address** (tuple)
-    * 隧道远程端的IP和端口。
-    * 通常IP设置为127.0.0.1或localhost。
+    * **隧道远程端**的IP和端口。
+    * 如果ssh服务和实际业务服务都运行在一台服务器上，IP可以设置为127.0.0.1或localhost。
     * 端口是远程服务器的服务端口，本地端口映射到的远程服务端口。
 
-### 主要方法
+### 示例代码
 
-
-
+实现以下功能：
+1. 使用 SSHTunnelForwarder 创建了一个 SSH 隧道，将本地端口（local_port）映射到远程服务器 B 上 MySQL 服务所在的地址和端口（remote_db_host 和 remote_db_port）。转发端和远程端是同一个。
+2. 创建了一个 MySQL 连接，连接到本地映射的端口（local_port），这样实际上就是连接到了远程服务器 B 上的 MySQL 服务。
+3. 执行了一条查询语句，并打印结果。
+4. 关闭 MySQL 连接和 SSH 隧道。
 
 ```python
 from sshtunnel import SSHTunnelForwarder
 import pymysql
 
 # SSH 连接信息
-ssh_host = '60.204.187.6'
+ssh_host = 'xxxx.xxxx.xxxx.xxxx'
 ssh_port = 22
 ssh_user = 'root'
-ssh_password = 'Zhuzhenyang123!'
+ssh_password = 'xxxxxxxx'
 
 # 远程数据库信息
 remote_db_host = 'localhost'
 remote_db_port = 3306
 remote_db_user = 'root'
-remote_db_password = 'zhuzhenyang123'
+remote_db_password = 'xxxxxxxx'
 
 # 本地端口，用于建立 SSH 隧道
 local_port = 3307
