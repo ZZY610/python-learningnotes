@@ -99,13 +99,13 @@ geometry(400x400+100+100)
 #### 1. `pack` 布局管理器：
 `pack` 布局管理器会按照添加控件的顺序，逐个排列它们。它提供了一些选项来控制控件的位置和大小。一般情况下，`pack` 布局适用于简单的排列方式。
 
-##### 主要方法：
+主要方法：
 - `pack(side=...)`：指定控件的放置方向，可选的值包括 `TOP`、`BOTTOM`、`LEFT` 和 `RIGHT`。
 - `pack(fill=...)`：指定控件沿着所在容器的方向填充，可选的值包括 `BOTH`、`X` 和 `Y`。
 - `pack(expand=True)`：设置控件是否可以在空间允许的情况下扩展。
 - `pack(anchor=...)`：指定控件相对于父容器的对齐方式，可选的值包括 `N`、`S`、`W`、`E`、`NW`、`NE`、`SW` 和 `SE`。
 
-##### 示例：
+示例：
 ```python
 label1.pack(side="top", fill="x")
 label2.pack(side="left", fill="y", expand=True)
@@ -115,19 +115,19 @@ button1.pack(side="bottom", anchor="e")
 #### 2. `grid` 布局管理器：
 `grid` 布局管理器允许使用网格来排列控件，类似于表格布局。通过指定行和列来放置控件，可以更灵活地控制控件的位置和大小。一般情况下，`grid` 布局适用于需要更精确控制布局的情况。
 
-##### 主要方法：
+主要方法：
 - `grid(row=..., column=...)`：指定控件所在的行和列。
 - `grid(rowspan=..., columnspan=...)`：指定控件占据的行数和列数。
 - `grid(sticky=...)`：设置控件在所在的网格中的对齐方式，可选的值包括 `N`、`S`、`W`、`E`、`NW`、`NE`、`SW` 和 `SE`。
 
-##### 示例：
+示例：
 ```python
 label1.grid(row=0, column=0, sticky="w")
 label2.grid(row=1, column=0, rowspan=2, sticky="nsew")
 button1.grid(row=2, column=1, sticky="e")
 ```
 
-#### 区别和选择：
+区别和选择：
 - `pack` 布局管理器简单易用，适合用于快速布局。
 - `grid` 布局管理器更加灵活，适用于需要精确控制布局的情况。
 
@@ -271,21 +271,32 @@ root.mainloop()
 
 #### 2. 配置列
 
-通过 `columns` 参数配置 `Treeview` 的列。列的定义不包括树状结构的列（根节点），但你可以通过 `heading` 方法设置列的标题。
+通过 `columns` 参数配置 `Treeview` 的列。列的定义不包括树状结构的列（根节点），但可以通过 `heading` 方法设置列的标题。
 
+- Treeview方法
+    - columns：指定表格的列名，这些列名将用于后续的 heading 和 column 方法。
+    - show="headings"：只显示列标题，不显示默认的树形结构（即不显示第一列的树形图标）。
+- heading 方法用于设置列的标题和对齐方式。
+    - text：设置 **列标题** 的显示文本。
+    - anchor：设置列标题的对齐方式（默认是 tk.W，即左对齐）。
+- column 方法用于设置列的宽度、对齐方式等属性。
+    - width：设置列的宽度（以像素为单位）。
+    - anchor：设置列内容的对齐方式（默认是 tk.W，即左对齐）。
+    - stretch：设置列是否随窗口大小变化而伸缩（默认是 True）。
 ```python
 #--run--
 from tkinter import Tk
 from tkinter import ttk
 
 root = Tk()
-tree = ttk.Treeview(root, columns=('col1', 'col2'))
+tree = ttk.Treeview(root, columns=('col1', 'col2'),show="headings")
 tree.heading('#0', text='Tree Column')  # 树状列标题
 tree.heading('col1', text='Column 1')
 tree.heading('col2', text='Column 2')
 tree.pack()
 root.mainloop()
 ```
+
 
 #### 3. 插入数据
 
